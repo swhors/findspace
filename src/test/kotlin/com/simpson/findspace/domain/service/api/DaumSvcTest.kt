@@ -4,33 +4,52 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import com.simpson.findspace.domain.config.api.DaumConfig
+import com.simpson.findspace.domain.repository.AccountRepo
+import com.simpson.findspace.domain.repository.SearchCacheRepo
+import com.simpson.findspace.domain.repository.SearchHistoryRepo
 import org.junit.Before
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
 import org.junit.runner.RunWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import org.mockito.MockitoAnnotations.initMocks
 import org.mockito.junit.MockitoJUnitRunner
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.net.URL
 
-@RunWith(MockitoJUnitRunner::class)
-class DaumSvcTest {
+@ExtendWith(SpringExtension::class)
+@WebMvcTest(DaumSvc::class)
+@AutoConfigureMockMvc(addFilters = false)
+internal class DaumSvcTest {
 
-	@InjectMocks
+	@Autowired
 	private lateinit var daumSvc: DaumSvc
 
-	@InjectMocks
-	private lateinit var url: URL
-
-	@InjectMocks
+	@MockBean
 	private lateinit var daumConfig: DaumConfig
+
+	@MockBean
+	private lateinit var accountRepo: AccountRepo
+
+	@MockBean
+	private lateinit var searchCacheRepo: SearchCacheRepo
+
+	@MockBean
+	private lateinit var searchHistoryRepo: SearchHistoryRepo
 
 	@BeforeEach
 	fun setUp() {
-		MockitoAnnotations.initMocks(this)
 	}
 
 	@Test
