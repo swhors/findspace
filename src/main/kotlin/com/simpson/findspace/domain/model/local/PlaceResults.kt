@@ -7,7 +7,7 @@ data class PlaceResults(val keyword: String?,
                                          length = builder.length,
                                          places = builder.places)
 
-    class Builder () {
+    class Builder {
         var keyword: String ?= null
             private set
         var length: Int ?= null

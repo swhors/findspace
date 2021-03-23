@@ -10,5 +10,4 @@ data class Document(var address_name: String,
                     var place_name: String,
                     var place_url: String,
                     var road_address_name: String,
-                    var x: String, val y: String) {
-}
+                    var x: String, val y: String)

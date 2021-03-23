@@ -14,28 +14,12 @@ import javax.servlet.http.HttpServletRequest
 class UserCtl(@Autowired private val passwordEncoder: PasswordEncoder,
               @Autowired private val jwtTokenProvider: JwtTokenProvider,
               @Autowired private val accountRepo: AccountRepo) {
+
     @GetMapping("/hello")
     @PreAuthorize("hasRole('ROLE_USER')")
     fun printHello() : String {
         print("hello")
         return "hello"
-    }
-
-    @GetMapping("/logout")
-    fun logout() : String {
-        print("login")
-        return "logout"
-    }
-
-    @GetMapping("/get_session")
-    fun get_session() : String {
-        print("login")
-        return "logout"
-    }
-
-    @RequestMapping("/success")
-    fun success(request: HttpServletRequest) : String {
-        return "success"
     }
 
     // 회원가입

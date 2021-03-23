@@ -4,6 +4,4 @@ enum class Sort(sort: String) {
     SIM("sim"), DATE("date"), ASC("asc"), DSC("dsc");
 
     private var sortType: String = sort
-
-    fun sort(): String = this.sortType
 }

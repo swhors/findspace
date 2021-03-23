@@ -22,8 +22,11 @@ data class Account(
     @CreationTimestamp
     var createDt: LocalDateTime = LocalDateTime.now()
 ){
-    constructor(builder: Builder) : this(null, builder.userName,
-        builder.password, builder.roles, LocalDateTime.now())
+    constructor(builder: Builder) : this(null,
+                                         builder.userName,
+                                         builder.password,
+                                         builder.roles,
+                                         LocalDateTime.now())
 
     fun getAuthorities(): User {
         return User(
@@ -32,7 +35,7 @@ data class Account(
         )
     }
 
-    class Builder() {
+    class Builder {
         var userName: String? = null
             private set
         var password: String? = null

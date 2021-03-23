@@ -25,6 +25,7 @@ data class SearchCache(
 
         @UpdateTimestamp
         var updated: LocalDateTime = LocalDateTime.now() ) {
+    
     constructor(keyword: String?, places: String?, hitcount: Int?)
             : this (id = null,
                     keyword = keyword !!,

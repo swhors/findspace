@@ -16,7 +16,7 @@ class SearchCtl(@Autowired val historySvc: SearchHistorySvc,
     fun getSearchHistory(@PathVariable("username") userName : String) : String {
         val histories = historySvc.findTop10ByUserName(userName)
         val historyList = ArrayList<HistoryResult>()
-        histories!!.forEach { it ->
+        histories!!.forEach {
             historyList.add(HistoryResult.
                                 Builder().
                                 keyword(URLDecoder.decode(it.keyword, "UTF-8")).

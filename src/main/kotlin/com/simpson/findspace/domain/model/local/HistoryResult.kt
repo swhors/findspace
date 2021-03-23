@@ -6,7 +6,7 @@ import java.time.LocalTime
 data class HistoryResult(val keyword: String?, val created : String?) {
     constructor(builder: Builder) : this(builder.keyword, builder.created)
 
-    class Builder() {
+    class Builder {
         var keyword : String ?= null
             private set
         var created : String ?= null

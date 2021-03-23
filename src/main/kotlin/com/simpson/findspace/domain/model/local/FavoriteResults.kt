@@ -4,7 +4,7 @@ data class FavoriteResults(val length: Int?,
                            val favorities: ArrayList<FavoriteResult>?) {
     constructor(builder : Builder) : this(builder.length, builder.favorities)
 
-    class Builder() {
+    class Builder {
         var length: Int ?= null
         var favorities: ArrayList<FavoriteResult> ?= null
 

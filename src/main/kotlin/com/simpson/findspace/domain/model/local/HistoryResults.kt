@@ -4,7 +4,7 @@ data class HistoryResults(val length: Int?,
                           val histories: ArrayList<HistoryResult>?) {
     constructor(builder: Builder) : this (builder.length, builder.histories)
 
-    class Builder() {
+    class Builder {
         var length: Int ?= null
         var histories: ArrayList<HistoryResult> ?= null
 
