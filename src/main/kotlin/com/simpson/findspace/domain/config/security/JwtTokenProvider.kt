@@ -17,7 +17,7 @@ import java.util.Base64
 import java.util.Date
 
 /***
- * 이 코드는 다음 사이트의 자바 코드를 참조하여 성한 것입니다.
+ * 이 코드는 다음 사이트의 자바 코드를 참조하여 작성하였습니다.
  * - https://daddyprogrammer.org/post/636/springboot2-springsecurity-authentication-authorization/
  *
  * 2021/03/25 swhors@naver.com
