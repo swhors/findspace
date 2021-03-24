@@ -16,19 +16,23 @@ import javax.servlet.http.HttpServletRequest
 import java.util.Base64
 import java.util.Date
 
-
+/***
+ * 이 코드는 다음 사이트의 자바 코드를 참조하여 성한 것입니다.
+ * - https://daddyprogrammer.org/post/636/springboot2-springsecurity-authentication-authorization/
+ *
+ * 2021/03/25 swhors@naver.com
+ */
 @RequiredArgsConstructor
 @Component
-class JwtTokenProvider(@Autowired private val accountSvc: AccountSvc) {
-    private var secretKey = "webfirewood"
+class JwtTokenProvider(@Autowired private val accountSvc: AccountSvc,
+                       @Autowired private val jwtProperty: JwtProperty) {
 
-    // 토큰 유효시간 30분
-    private val tokenValidTime = 30 * 60 * 1000L
+    private var secretKey = "findplace"
 
     // 객체 초기화, "secretKey"를 Base64로 인코딩한다.
     @PostConstruct
     protected fun init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.toByteArray())
+        secretKey = Base64.getEncoder().encodeToString(jwtProperty.secretkey().toByteArray())
     }
 
     // JWT 토큰 생성
@@ -39,7 +43,8 @@ class JwtTokenProvider(@Autowired private val accountSvc: AccountSvc) {
         return Jwts.builder()
             .setClaims(claims) // 정보 저장
             .setIssuedAt(now) // 토큰 발행 시간 정보
-            .setExpiration(Date(now.time + tokenValidTime)) // set Expire Time
+//            .setExpiration(Date(now.time + tokenValidTime)) // set Expire Time
+            .setExpiration(Date(now.time + jwtProperty.duration().toLong())) // set Expire Time
             .signWith(SignatureAlgorithm.HS256, secretKey) // 사용할 암호화 알고리즘과
             // signature 에 들어갈 secret값 세팅
             .compact()

@@ -1,5 +1,6 @@
 package com.simpson.findspace.domain.service
 
+import com.simpson.findspace.domain.config.CacheProperty
 import com.simpson.findspace.domain.model.h2.SearchCache
 import com.simpson.findspace.domain.service.api.DaumSvc
 import com.simpson.findspace.domain.service.api.NaverSvc
@@ -34,6 +35,10 @@ internal class SearchSvcTest {
     @Autowired
     @Spy
     private var searchApiSvcs: ArrayList<SearchApiSvc> = arrayListOf()
+
+    @Autowired
+    @Mock
+    private lateinit var cacheProperty: CacheProperty
 
     @BeforeEach
     fun setUp() {
@@ -98,6 +103,7 @@ internal class SearchSvcTest {
     @Test
     fun searchPlaceFromLocal() {
         Mockito.`when`(cacheSvc.getCachedPlaces(anyString())).thenReturn(searchCaches1)
+        Mockito.`when`(cacheProperty.refreshIntervalMin()).thenReturn("10")
         val result = searchSvc.searchPlace("A")
         print("searchPlaceFromLocal = $result\n")
         assertEquals(result, wantedResult)

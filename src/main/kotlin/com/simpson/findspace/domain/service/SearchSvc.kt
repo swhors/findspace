@@ -1,10 +1,10 @@
 package com.simpson.findspace.domain.service
 
+import com.simpson.findspace.domain.config.CacheProperty
 import com.simpson.findspace.domain.model.h2.SearchCache
 import com.simpson.findspace.domain.service.api.SearchApiSvc
 import com.simpson.findspace.domain.service.h2.SearchCacheSvc
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalTime
@@ -13,10 +13,8 @@ import kotlin.collections.ArrayList
 
 @Service
 class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
-                @Autowired val cacheSvc: SearchCacheSvc) {
-
-    @Value("#{apps.cache.refresh.interval.min}")
-    private var refreshIntervalMin : Int = 10
+                @Autowired val cacheSvc: SearchCacheSvc,
+                @Autowired val cacheProperty: CacheProperty) {
 
     fun getFavoriteKeyWord() : ArrayList<SearchCache> ? {
         return cacheSvc.getFavoriteKeyWord()
@@ -85,7 +83,8 @@ class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
         var createCache = true
         var result = cache?.let{
             val dtNow = LocalTime.now().minute
-            val dtUp = it.updated.toLocalTime().minute + refreshIntervalMin
+            val duration = cacheProperty.refreshIntervalMin().toInt()
+            val dtUp = it.updated.toLocalTime().minute + duration
             createCache = false
             if (dtNow < dtUp) {
                 cacheSvc.updateHitCount(keyword)

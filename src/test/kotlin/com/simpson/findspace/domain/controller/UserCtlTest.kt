@@ -1,13 +1,10 @@
 package com.simpson.findspace.domain.controller
 
-import com.nhaarman.mockitokotlin2.doAnswer
+import com.simpson.findspace.domain.config.CacheProperty
 import com.simpson.findspace.domain.config.security.JwtTokenProvider
 import com.simpson.findspace.domain.model.h2.Account
 import com.simpson.findspace.domain.model.h2.AccountRole
 import com.simpson.findspace.domain.repository.AccountRepo
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import org.junit.jupiter.api.BeforeEach
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,6 +34,10 @@ internal class UserCtlTest {
     @Mock
     private lateinit var accountRepo: AccountRepo
 
+    @Autowired
+    @Mock
+    private lateinit var cacheProperty: CacheProperty
+
     private val userName = "tester"
     private val password = "tester"
     private val wantedId = 1L
@@ -49,6 +50,8 @@ internal class UserCtlTest {
         Mockito.doAnswer{
             return@doAnswer password
         }.`when`(passwordEncoder).encode(anyString())
+
+        Mockito.`when`(cacheProperty.refreshIntervalMin()).thenReturn("10")
     }
     
     // 회원가입
@@ -82,8 +85,6 @@ internal class UserCtlTest {
         }.`when`(passwordEncoder).matches(anyString(), anyString())
 
         Mockito.`when`(jwtTokenProvider.createToken(anyString(), anyString())).thenReturn(wantedJWT)
-
-        val password1 = password as CharSequence
 
         val result = userCtl.login(hashMapOf("userName" to userName, "password" to password))
 		print("testLogin jwt = $result\n")
