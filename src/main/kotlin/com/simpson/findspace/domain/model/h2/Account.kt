@@ -51,7 +51,7 @@ data class Account(
         fun password(password: String?) = apply { this.password = password }
         fun roles(role: AccountRole?) = apply {
             if (role != null) {
-                this.roles?.add(role)
+                this.roles = setOf(role) as MutableSet<AccountRole>
             }
         }
         fun build() = Account(this)

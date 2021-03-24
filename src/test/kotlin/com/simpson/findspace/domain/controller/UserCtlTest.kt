@@ -1,5 +1,6 @@
 package com.simpson.findspace.domain.controller
 
+import com.nhaarman.mockitokotlin2.doAnswer
 import com.simpson.findspace.domain.config.security.JwtTokenProvider
 import com.simpson.findspace.domain.model.h2.Account
 import com.simpson.findspace.domain.model.h2.AccountRole
@@ -29,33 +30,35 @@ internal class UserCtlTest {
     private lateinit var passwordEncoder: PasswordEncoder
 
     @Autowired
-    @Spy
+    @Mock
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Autowired
-    @Spy
+    @Mock
     private lateinit var accountRepo: AccountRepo
+
+    private val userName = "tester"
+    private val password = "tester"
+    private val wantedId = 1L
+    private val wantedJWT = "abcdefghi"
 
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+
+        Mockito.doAnswer{
+            return@doAnswer password
+        }.`when`(passwordEncoder).encode(anyString())
     }
-    
-    private val userName = "tester"
-    private val password = "tester"
-    private val wantedId = 1L
-	private val wantedJWT = "abcdefghi"
     
     // 회원가입
     @Test
     fun testJoin() {
-        Mockito.`when`(passwordEncoder.encode(anyString())).thenReturn("ABDCDFEREWESDD")
         Mockito.doAnswer { invocation ->
             val inAccount = invocation.arguments[0] as Account
-            print("testJoin inner = $inAccount")
             inAccount.id = wantedId
             return@doAnswer inAccount
-        }.`when`(accountRepo.save(any()))
+        }.`when`(accountRepo).save(any())
 
         val id = userCtl
             .join(hashMapOf("userName" to userName, "password" to password))
@@ -67,22 +70,23 @@ internal class UserCtlTest {
     @Test
     fun testLogin() {
         Mockito.doAnswer { invocation ->
-            val userName = invocation.arguments[0]
-            val password = invocation.arguments[1]
+            val userName1 = invocation.arguments[0]
             return@doAnswer Account.Builder()
-				.userName(userName as String?)
-				.password(password as String?)
-				.roles(AccountRole.USER).build()
-        }.`when`(accountRepo.findByUserName(anyString()))
-		
-		Mockito.`when`(passwordEncoder.encode(anyString())).thenReturn(password)
-		
-		Mockito.doAnswer { invocation ->
-			return@doAnswer wantedJWT
-		}.`when`(jwtTokenProvider.createToken(userName, "ROLE_USER"))
-		
+                .userName(userName1 as String?)
+                .password(password as String?)
+                .roles(AccountRole.USER).build()
+        }.`when`(accountRepo).findByUserName(anyString())
+
+        Mockito.doAnswer{
+            return@doAnswer (it.arguments[0] == it.arguments[1])
+        }.`when`(passwordEncoder).matches(anyString(), anyString())
+
+        Mockito.`when`(jwtTokenProvider.createToken(anyString(), anyString())).thenReturn(wantedJWT)
+
+        val password1 = password as CharSequence
+
         val result = userCtl.login(hashMapOf("userName" to userName, "password" to password))
-		print("testLogin jwt = $result")
+		print("testLogin jwt = $result\n")
 		
 		assertEquals((result?.length!! > 0), true)
     }
