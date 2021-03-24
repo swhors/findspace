@@ -9,5 +9,8 @@ class NaverConfig {
     lateinit var clientId: String
     lateinit var clientSecret: String
     lateinit var url: String
-
+    
+    fun clientId() = clientId
+    fun clientSecret() = clientSecret
+    fun url() = url
 }

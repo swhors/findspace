@@ -25,7 +25,7 @@ class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
         val secondResultCols = ArrayList<String>()
         val firstResultCols = ArrayList<String>()
         for (search in searchApiSvcs) {
-            val results = search.searchPlace(keyword)
+            val results = search.searchPlace(keyWord = keyword)
             print("results = $results\n")
             for (result in results) {
                 if (secondResultCols.contains(result)) {

@@ -8,4 +8,7 @@ import org.springframework.context.annotation.Configuration
 class DaumConfig {
     lateinit var restApiKey: String
     lateinit var url: String
+    
+    fun restApiKey() = restApiKey
+    fun url() = url
 }

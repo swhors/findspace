@@ -1,75 +1,86 @@
 package com.simpson.findspace.domain.service.api
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
 import com.simpson.findspace.domain.config.api.DaumConfig
-import com.simpson.findspace.domain.repository.AccountRepo
-import com.simpson.findspace.domain.repository.SearchCacheRepo
-import com.simpson.findspace.domain.repository.SearchHistoryRepo
-import org.junit.Before
+import org.junit.Test
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyMap
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.mockito.MockitoAnnotations.initMocks
 import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import java.net.URL
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-@ExtendWith(SpringExtension::class)
-@WebMvcTest(DaumSvc::class)
-@AutoConfigureMockMvc(addFilters = false)
+@RunWith(MockitoJUnitRunner::class)
 internal class DaumSvcTest {
 
-	@Autowired
-	private lateinit var daumSvc: DaumSvc
+    @InjectMocks
+    private lateinit var daumSvc: DaumSvc
+    
+    @Autowired
+    @Mock
+    private lateinit var daumConfig: DaumConfig
+    
+    @Autowired
+    @Mock
+    private lateinit var httpClient: HttpClient
+    
+    private val keyword = "안산술집"
+    private val placeName = "평규술집 안산중앙점"
+    
+    @BeforeEach
+    fun setUp() {
+        MockitoAnnotations.openMocks(this)
+    }
+    
+    private fun searchPlaceCore(rightCase: Boolean) : ArrayList<String> {
+        val response = "{\"documents\":[{" +
+                "\"address_name\":\"경기 안산시 단원구 고잔동 539-3\","+
+                "\"category_group_code\":\"FD6\"," +
+                "\"category_group_name\":\"음식점\","+
+                "\"category_name\":\"음식점 \u003e 술집 \u003e 호프,요리주점\"," +
+                "\"distance\":\"\"," +
+                "\"id\":\"846908683\"," +
+                "\"phone\":\"\"," +
+                (if (rightCase) "\"place_name\":\"$placeName\"," else "") +
+                "\"place_url\":\"http://place.map.kakao.com/846908683\"," +
+                "\"road_address_name\":\"경기 안산시 단원구 고잔로 112\"," +
+                "\"x\":\"126.838553814052\"," +
+                "\"y\":\"37.3187008460709\"}]," +
+              "\"meta\":{" +
+                "\"is_end\":false," +
+                "\"pageable_count\":45," +
+                "\"same_name\":{" +
+                  "\"keyword\":\"$keyword\"," +
+                  "\"region\":[]," +
+                  "\"selected_region\":\"\"}," +
+                "\"total_count\":1" +
+              "}}"
+        Mockito.`when`(daumConfig.url()).thenReturn("https://api.daum.net")
+        Mockito.`when`(daumConfig.restApiKey()).thenReturn("11111111")
+        Mockito.`when`(httpClient.getContent(anyString(),
+                anyString(),
+                anyMap<String, String>() as HashMap<String,String>)).thenReturn(response)
+        return daumSvc.searchPlace(keyWord = keyword, limit = 1) as ArrayList<String>
+    }
 
-	@MockBean
-	private lateinit var daumConfig: DaumConfig
-
-	@MockBean
-	private lateinit var accountRepo: AccountRepo
-
-	@MockBean
-	private lateinit var searchCacheRepo: SearchCacheRepo
-
-	@MockBean
-	private lateinit var searchHistoryRepo: SearchHistoryRepo
-
-	@BeforeEach
-	fun setUp() {
-	}
-
-	@Test
-	fun searchPlace() {
-		val keyword = "안산술집"
-		val response =
-			"{\"documents\":[{\"address_name\":\"경기 안산시 단원구 고잔동 539-3\","+
-			"\"category_group_code\":\"FD6\",\"category_group_name\":\"음식점\","+
-			"\"category_name\":\"음식점 \u003e 술집 \u003e 호프,요리주점\",\"distance\":\"\"," +
-			"\"id\":\"846908683\",\"phone\":\"\",\"place_name\":\"평규술집 안산중앙점\"," +
-			"\"place_url\":\"http://place.map.kakao.com/846908683\"," +
-			"\"road_address_name\":\"경기 안산시 단원구 고잔로 112\"," +
-			"\"x\":\"126.838553814052\",\"y\":\"37.3187008460709\"}]," +
-			"\"meta\":{\"is_end\":false,\"pageable_count\":45," +
-			"\"same_name\":{\"keyword\":\"$keyword\",\"region\":[],\"selected_region\":\"\"}," +
-			"\"total_count\":1}}"
-		whenever(daumSvc.getContent(any(), any(), any())).thenReturn(response)
-
-		val result = daumSvc.searchPlace(keyword)
-		print("$result")
-
-	}
+    @Test
+    fun searchPlaceRightCase() {
+        val result = searchPlaceCore(true)
+        print("daumSearchPlaceRightCase : size  = ${result.size}\n")
+        print("daumSearchPlaceRightCase : item0 = ${result[0]}\n")
+        assertTrue(result.size == 1)
+        assertEquals(result[0], placeName)
+    }
+    
+    @Test
+    fun searchPlaceIllegalCase() {
+        val result = searchPlaceCore(false)
+        print("daumSearchPlaceRightCase : size  = ${result.size}\n")
+        assertTrue(result.size == 0)
+    }
 }

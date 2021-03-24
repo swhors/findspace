@@ -142,7 +142,6 @@
             <artifactId>kotlin-test-junit</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
