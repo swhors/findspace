@@ -16,7 +16,6 @@ class UserCtl(@Autowired private val passwordEncoder: PasswordEncoder,
               @Autowired private val accountRepo: AccountRepo) {
 
     @GetMapping("/hello")
-    @PreAuthorize("hasRole('ROLE_USER')")
     fun printHello() : String {
         print("hello")
         return "hello"
