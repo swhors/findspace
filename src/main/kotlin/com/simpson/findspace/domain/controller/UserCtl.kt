@@ -35,9 +35,6 @@ class UserCtl(@Autowired private val passwordEncoder: PasswordEncoder,
     fun login(@RequestBody user: Map<String?, String?>): String? {
         val account: Account = user["userName"]?.let { accountRepo.findByUserName(it) }
                                ?: throw java.lang.IllegalArgumentException("가입 되지 않은 사용자 입니다.")
-        val userName = user["userName"]
-        val password = user["password"]
-        print("login user=$userName, password=$password")
         require(passwordEncoder.matches(user["password"], account.password)) {"잘못 된 비밀번호 입니다."}
         return jwtTokenProvider.createToken(account.userName, account.roles!!.stream().toString())
     }

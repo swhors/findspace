@@ -28,6 +28,10 @@ data class Account(
                                          builder.roles,
                                          LocalDateTime.now())
 
+    fun id(id: Long?) = apply { this.id = id }
+    fun userName(userName: String?) = apply { this.userName = userName }
+    fun password(password: String?) = apply { this.password = password }
+
     fun getAuthorities(): User {
         return User(
             this.userName, this.password,
