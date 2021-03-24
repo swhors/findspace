@@ -17,14 +17,14 @@ class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
         return cacheSvc.getFavoriteKeyWord()
     }
 
-    private fun searchLocal(keyword: String) : SearchCache?{
+    fun searchLocal(keyword: String) : SearchCache?{
         return cacheSvc.getCachedPlaces(keyword)
     }
 
     fun searchRemote(keyword: String) : ArrayList<String> {
         val secondResultCols = ArrayList<String>()
         val firstResultCols = ArrayList<String>()
-        for (search in searchApiSvcs) {
+        searchApiSvcs.forEach { search ->
             val results = search.searchPlace(keyWord = keyword)
             print("results = $results\n")
             for (result in results) {
@@ -66,7 +66,7 @@ class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
             }
         }
 
-        print("searchPlace == $result")
+        print("searchPlace == $result\n")
 
         return result
     }

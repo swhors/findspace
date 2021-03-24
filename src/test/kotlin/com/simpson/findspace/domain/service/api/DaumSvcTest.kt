@@ -39,18 +39,18 @@ internal class DaumSvcTest {
     
     private fun searchPlaceCore(rightCase: Boolean) : ArrayList<String> {
         val response = "{\"documents\":[{" +
-                "\"address_name\":\"경기 안산시 단원구 고잔동 539-3\","+
-                "\"category_group_code\":\"FD6\"," +
+                "\"address_name\":\"경기 안산시 단원구\","+
+                "\"category_group_code\":\"FD\"," +
                 "\"category_group_name\":\"음식점\","+
-                "\"category_name\":\"음식점 \u003e 술집 \u003e 호프,요리주점\"," +
+                "\"category_name\":\"음식점 술집 호프,요리주점\"," +
                 "\"distance\":\"\"," +
                 "\"id\":\"846908683\"," +
                 "\"phone\":\"\"," +
                 (if (rightCase) "\"place_name\":\"$placeName\"," else "") +
-                "\"place_url\":\"http://place.map.kakao.com/846908683\"," +
-                "\"road_address_name\":\"경기 안산시 단원구 고잔로 112\"," +
-                "\"x\":\"126.838553814052\"," +
-                "\"y\":\"37.3187008460709\"}]," +
+                "\"place_url\":\"http://place.map.kakao.com/908683\"," +
+                "\"road_address_name\":\"경기 안산시 단원구\"," +
+                "\"x\":\"12.83814052\"," +
+                "\"y\":\"3.318460709\"}]," +
               "\"meta\":{" +
                 "\"is_end\":false," +
                 "\"pageable_count\":45," +

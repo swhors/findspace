@@ -44,10 +44,10 @@ internal class NaverSvcTest {
                 "\"category\": \"술집>맥주,호프\"," +
                 "\"description\": \"\"," +
                 "\"telephone\": \"\"," +
-                "\"address\": \"경기도 안산시 단원구 고잔동 539-13 1층\"," +
-                "\"roadAddress\": \"경기도 안산시 단원구 고잔1길 67 1층\"," +
-                "\"mapx\": \"297477\"," +
-                "\"mapy\": \"524661\"}]}"
+                "\"address\": \"경기도 안산시 단원구 1층\"," +
+                "\"roadAddress\": \"경기도 안산시 단원구\"," +
+                "\"mapx\": \"2974\"," +
+                "\"mapy\": \"5246\"}]}"
         Mockito.`when`(naverConfig.url()).thenReturn("https://api.daum.net")
         Mockito.`when`(naverConfig.clientId()).thenReturn("11111111")
         Mockito.`when`(naverConfig.clientSecret()).thenReturn("11111111")
