@@ -31,7 +31,7 @@ class SearchCtl(@Autowired val historySvc: SearchHistorySvc,
             val histories = historySvc.findTop10ByUserName(userName)
 
             //DB에서 읽은 데이터를 Result 형태로 변환
-            histories !!.forEach {
+            histories?.forEach {
                 historyList.add(HistoryResult
                     .Builder()
                     .keyword(URLDecoder.decode(it.keyword, "UTF-8"))
@@ -70,7 +70,8 @@ class SearchCtl(@Autowired val historySvc: SearchHistorySvc,
             val favoriteList = ArrayList<FavoriteResult>()
 
             // 인기 키워드를 검색하여 리턴의 items 형태로 변환
-            searchSvc.getFavoriteKeyWord() !!.forEach {
+            val favorities = searchSvc.getFavoriteKeyWord()
+            favorities?.forEach {
                 favoriteList.add(FavoriteResult
                     .Builder()
                     .hitCount(it.hitcount)
@@ -101,8 +102,9 @@ class SearchCtl(@Autowired val historySvc: SearchHistorySvc,
             val placeList = ArrayList<PlaceResult>()
 
             // 사용자 키워드 검색
+            val places = searchSvc.searchPlace(keyword, userName)
             // ArrayList<PlaceResult>의 데이터 변환
-            searchSvc.searchPlace(keyword, userName).forEach {
+            places.forEach {
                 placeList.add(PlaceResult.Builder().place(it).build())
             }
 
@@ -122,7 +124,7 @@ class SearchCtl(@Autowired val historySvc: SearchHistorySvc,
     @GetMapping("/search/place")
     fun searchPlace(@RequestParam("keyword") keyword: String) : String{
         return searchPlaceInternal(
-                SecurityContextHolder.getContext()!!.authentication!!.name,
+                SecurityContextHolder.getContext().authentication.name,
                 keyword)
     }
 }

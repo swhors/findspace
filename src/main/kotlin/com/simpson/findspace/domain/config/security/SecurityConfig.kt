@@ -30,12 +30,9 @@ class SecurityConfig(
                 authorize("/**", authenticated)
             }
         }
-        http?.antMatcher("/api/search/**")?.
+        http?.requestMatchers()?.antMatchers("/api/search/**", "/join")?.and()?.
             addFilterBefore(JwtAuthenticationFilter(jwtTokenProvider),
                             UsernamePasswordAuthenticationFilter::class.java)
-        http?.antMatcher("/join")?.
-        addFilterBefore(JwtAuthenticationFilter(jwtTokenProvider),
-            UsernamePasswordAuthenticationFilter::class.java)
     }
 
     @Bean
