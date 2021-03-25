@@ -12,6 +12,9 @@
 ## 상세 기능
 - User-Join
   - 사용자를 추가 합니다.
+  - 테스트 방법은 다음과 같습니다.
+    - curl -H "Content-Type:application/json" -d "{\"userName\":\"a-user@test.com\",\"password\":\"password\"}" -X POST http://192.168.4.26:7060/join
+  - 이 명령을 실행 시키고 성공 시에는 DB에 생성 된 사용자 ID를 반환하게 됩니다.
 - User-Login
   - 사용자를 인증하고, JWT Tag를 발급하여 검색 서비스 이용시에 사용자 인증을 하도록 합니다.
 - Search-Place
