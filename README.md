@@ -101,8 +101,10 @@
     - curl -H "Accept: */*" -H "Connection: keep-alive" -H "X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhLXVzZXJAdGVzdC5jb20iLCJyb2xlcyI6ImphdmEudXRpbC5zdHJlYW0uUmVmZXJlbmNlUGlwZWxpbmUkSGVhZEAzMzI2MTViYyIsImlhdCI6MTYxNjY1MDEyMywiZXhwIjoxNjE2NjUxOTIzfQ.o4e5M4kWy0lmcGmh2UwQn0hkVTHkW3WiEiWcsG_voDE" -X GET http://127.0.0.1:7060/api/search/favorite
 
 - 결과 샘플
+  - User-Join
+    - {"id":2}
   - User-Login
-    - eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhLXVzZXJAdGVzdC5jb20iLCJyb2xlcyI6ImphdmEudXRpbC5zdHJlYW0uUmVmZXJlbmNlUGlwZWxpbmUkSGVhZEA2OTFjZGRlYiIsImlhdCI6MTYxNjY1MTMxOSwiZXhwIjoxNjE2NjUzMTE5fQ.GbbpXhqN37MQwQ5qFE-r3RtsMKWaCCAbnrdN9C62l2E
+    - {"id":2, "token":" eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhLXVzZXJAdGVzdC5jb20iLCJyb2xlcyI6ImphdmEudXRpbC5zdHJlYW0uUmVmZXJlbmNlUGlwZWxpbmUkSGVhZEA2OTFjZGRlYiIsImlhdCI6MTYxNjY1MTMxOSwiZXhwIjoxNjE2NjUzMTE5fQ.GbbpXhqN37MQwQ5qFE-r3RtsMKWaCCAbnrdN9C62l2E"
   - Search-Place
     - {"keyword":"seoul","length":15,"places":[{"place":"포시즌스호텔서울"},{"place":"롯데호텔서울 무궁화"},{"place":"롯데호텔서울 모모야마"},{"place":"롯데호텔서울 도림"},{"place":"아라리오갤러리 서울"},{"place":"NEO SEOUL GUESTHOUSE"},{"place":"Hoods Seoul"},{"place":"dna SEOUL"},{"place":"I Art Seoul Space"},{"place":"uh suite the seoul"},{"place":"CHERTOI SEOUL"},{"place":"YDP seoul"},{"place":"CGS SEOUL"},{"place":"SVA SEOUL OFFICE"},{"place":"라마다서울호텔"}]}
   - Search-History
