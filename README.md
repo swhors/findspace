@@ -1,8 +1,10 @@
 # findspace
 
 ## 소개
-- 이것은 사용자의 입력을 받아서 다음과 네이버의 Open-Api를 이용하여 검색을 하여 사용자에게 전달하는 서버입니다.
-- 이것은 사용자 관리와 검색을 위하여 다음과 같은 API를 제공합니다.
+- 이 프로젝트는 사용자의 키워드를 입력 받아서 위치를 검색하는 것입니다.
+- 검색은 다음과 네이버의 Open-Api를 이용하며, 두 개의 API를 통해 검색한 결과를 합하여 사용자에게 전달 합니다.
+
+- 사용자 관리와 검색을 위하여 다음과 같은 API를 제공합니다.
   - User-Join
   - User-Login
   - Serach-Place
@@ -24,7 +26,7 @@
   - mvn clean;mvn package
   - java -jar target/findspace-0.0.1-SNAPSHOT.jar
 
-## 상세 기능
+## 상세 설명
 - User-Join
   - 설명
     - 사용자를 추가 합니다.
