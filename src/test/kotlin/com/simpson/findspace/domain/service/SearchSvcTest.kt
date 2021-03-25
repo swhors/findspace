@@ -1,11 +1,13 @@
 package com.simpson.findspace.domain.service
 
-import com.simpson.findspace.domain.config.CacheProperty
+import com.simpson.findspace.domain.config.SearchProperty
 import com.simpson.findspace.domain.model.h2.SearchCache
 import com.simpson.findspace.domain.service.api.DaumSvc
 import com.simpson.findspace.domain.service.api.NaverSvc
 import com.simpson.findspace.domain.service.api.SearchApiSvc
 import com.simpson.findspace.domain.service.h2.SearchCacheSvc
+import com.simpson.findspace.domain.service.h2.SearchHistorySvc
+import org.apache.tomcat.util.http.parser.Authorization
 import org.junit.jupiter.api.BeforeEach
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -13,6 +15,11 @@ import org.mockito.*
 import org.mockito.ArgumentMatchers.*
 import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.context.SecurityContext
+import org.springframework.security.core.context.SecurityContextHolder
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -23,6 +30,10 @@ internal class SearchSvcTest {
     @Autowired
     @Mock
     private lateinit var cacheSvc: SearchCacheSvc
+    
+    @Autowired
+    @Mock
+    private lateinit var historySvc: SearchHistorySvc
 
     @Autowired
     @Mock
@@ -35,11 +46,11 @@ internal class SearchSvcTest {
     @Autowired
     @Spy
     private var searchApiSvcs: ArrayList<SearchApiSvc> = arrayListOf()
-
+    
     @Autowired
     @Mock
-    private lateinit var cacheProperty: CacheProperty
-
+    private lateinit var searchProperty: SearchProperty
+    
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -103,8 +114,8 @@ internal class SearchSvcTest {
     @Test
     fun searchPlaceFromLocal() {
         Mockito.`when`(cacheSvc.getCachedPlaces(anyString())).thenReturn(searchCaches1)
-        Mockito.`when`(cacheProperty.refreshIntervalMin()).thenReturn("10")
-        val result = searchSvc.searchPlace("A")
+        Mockito.`when`(searchProperty.refreshIntervalMin()).thenReturn(10)
+        val result = searchSvc.searchPlace("a@test.com", "A")
         print("searchPlaceFromLocal = $result\n")
         assertEquals(result, wantedResult)
     }
@@ -118,7 +129,7 @@ internal class SearchSvcTest {
         Mockito.`when`(daumSvc.searchPlace(anyString(), anyInt())).thenReturn(daumResult)
         Mockito.`when`(naverSvc.searchPlace(anyString(), anyInt())).thenReturn(naverResult)
 
-        val result = searchSvc.searchPlace("A")
+        val result = searchSvc.searchPlace("a@test.com", "A")
         print("searchPlaceFromLocal = $result\n")
         assertEquals(result, wantedResult)
     }

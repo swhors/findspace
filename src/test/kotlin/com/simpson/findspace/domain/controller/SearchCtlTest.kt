@@ -4,8 +4,8 @@ import com.simpson.findspace.domain.model.h2.SearchCache
 import com.simpson.findspace.domain.model.h2.SearchHistory
 import com.simpson.findspace.domain.service.SearchSvc
 import com.simpson.findspace.domain.service.h2.SearchHistorySvc
-import org.junit.jupiter.api.BeforeEach
 import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
@@ -28,8 +28,10 @@ internal class SearchCtlTest {
     @Autowired
     @Mock
     private lateinit var searchSvc: SearchSvc
-
-
+    
+    private val testUser = "a@test.com"
+    private val testKeyWord = "a"
+    
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -44,7 +46,7 @@ internal class SearchCtlTest {
     @Test
     fun getSearchHistory() {
         Mockito.`when`(historySvc.findTop10ByUserName(anyString())).thenReturn(histories)
-        val result = searchCtl.getSearchHistory("a")
+        val result = searchCtl.getSearchHistoryInternal(testUser)
         print("getSearchHistory = $result\n")
         assertEquals((result.length > 0), true)
     }
@@ -69,8 +71,8 @@ internal class SearchCtlTest {
 
     @Test
     fun searchPlace() {
-        Mockito.`when`(searchSvc.searchPlace(anyString())).thenReturn(places)
-        val result = searchCtl.searchPlace("a")
+        Mockito.`when`(searchSvc.searchPlace(anyString(), anyString())).thenReturn(places)
+        val result = searchCtl.searchPlaceInternal(testUser, testKeyWord)
         print("searchPlace = $result\n")
         assertEquals((result.length > 0), true)
     }

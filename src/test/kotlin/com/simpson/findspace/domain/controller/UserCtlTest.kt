@@ -1,6 +1,6 @@
 package com.simpson.findspace.domain.controller
 
-import com.simpson.findspace.domain.config.CacheProperty
+import com.simpson.findspace.domain.config.SearchProperty
 import com.simpson.findspace.domain.config.security.JwtTokenProvider
 import com.simpson.findspace.domain.model.h2.Account
 import com.simpson.findspace.domain.model.h2.AccountRole
@@ -36,7 +36,7 @@ internal class UserCtlTest {
 
     @Autowired
     @Mock
-    private lateinit var cacheProperty: CacheProperty
+    private lateinit var searchProperty: SearchProperty
 
     private val userName = "tester"
     private val password = "tester"
@@ -51,7 +51,7 @@ internal class UserCtlTest {
             return@doAnswer password
         }.`when`(passwordEncoder).encode(anyString())
 
-        Mockito.`when`(cacheProperty.refreshIntervalMin()).thenReturn("10")
+        Mockito.`when`(searchProperty.refreshIntervalMin()).thenReturn(10)
     }
     
     // 회원가입

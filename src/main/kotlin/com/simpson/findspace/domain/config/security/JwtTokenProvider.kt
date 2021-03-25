@@ -43,10 +43,8 @@ class JwtTokenProvider(@Autowired private val accountSvc: AccountSvc,
         return Jwts.builder()
             .setClaims(claims) // 정보 저장
             .setIssuedAt(now) // 토큰 발행 시간 정보
-//            .setExpiration(Date(now.time + tokenValidTime)) // set Expire Time
             .setExpiration(Date(now.time + jwtProperty.duration().toLong())) // set Expire Time
             .signWith(SignatureAlgorithm.HS256, secretKey) // 사용할 암호화 알고리즘과
-            // signature 에 들어갈 secret값 세팅
             .compact()
     }
 

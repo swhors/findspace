@@ -17,8 +17,7 @@ import kotlin.jvm.Throws
 
 @EnableWebSecurity
 class SecurityConfig(
-    @Autowired private val jwtTokenProvider: JwtTokenProvider,
-    @Autowired private val historySvc: SearchHistorySvc
+    @Autowired private val jwtTokenProvider: JwtTokenProvider
 ) : WebSecurityConfigurerAdapter(){
     override fun configure(http: HttpSecurity?) {
         http {
@@ -32,16 +31,10 @@ class SecurityConfig(
                 authorize("/user/**", hasRole("USER"))
                 authorize("/login", permitAll)
                 authorize("/**", authenticated)
-//                authorize("/hello", permitAll)
-//                authorize("/user/login", permitAll)
-//                authorize(HttpMethod.OPTIONS, "/**", permitAll)
-//                authorize("/api/v1/search", hasAnyRole(AccountRole.USER.toString()))
-//                authorize("/**", authenticated)
-//                authorize( anyRequest, permitAll)
             }
         }
         http?.antMatcher("/api/search/**")?.
-            addFilterBefore(JwtAuthenticationFilter(jwtTokenProvider, historySvc),
+            addFilterBefore(JwtAuthenticationFilter(jwtTokenProvider),
                             UsernamePasswordAuthenticationFilter::class.java)
     }
 

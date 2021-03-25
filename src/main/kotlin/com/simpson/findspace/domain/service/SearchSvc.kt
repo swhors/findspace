@@ -1,9 +1,10 @@
 package com.simpson.findspace.domain.service
 
-import com.simpson.findspace.domain.config.CacheProperty
+import com.simpson.findspace.domain.config.SearchProperty
 import com.simpson.findspace.domain.model.h2.SearchCache
 import com.simpson.findspace.domain.service.api.SearchApiSvc
 import com.simpson.findspace.domain.service.h2.SearchCacheSvc
+import com.simpson.findspace.domain.service.h2.SearchHistorySvc
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,7 +15,8 @@ import kotlin.collections.ArrayList
 @Service
 class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
                 @Autowired val cacheSvc: SearchCacheSvc,
-                @Autowired val cacheProperty: CacheProperty) {
+                @Autowired val searchHistorySvc: SearchHistorySvc,
+                @Autowired val searchProperty: SearchProperty) {
 
     fun getFavoriteKeyWord() : ArrayList<SearchCache> ? {
         return cacheSvc.getFavoriteKeyWord()
@@ -99,32 +101,42 @@ class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
      *  - Place List : 조회한 위치 리스트
      */
     @Transactional
-    fun searchPlace(keyword: String) : ArrayList<String> {
+    fun searchPlace(keyword: String, userName: String) : ArrayList<String> {
         val cache : SearchCache? = searchLocal(keyword)
         var createCache = true
+        // 로컬 DB 검색
         var result = cache?.let{
             val dtNow = LocalTime.now().minute
-            val duration = cacheProperty.refreshIntervalMin().toInt()
-            val dtUp = it.updated.toLocalTime().minute + duration
+            val dtUp = it.updated.toLocalTime().minute + searchProperty.refreshIntervalMin()
             createCache = false
             if (dtNow < dtUp) {
+                //데이터가 유효 한 경우에, hitcount를 증가 시키고 이 데이터를 반환 합니다.
                 cacheSvc.updateHitCount(keyword)
                 return@let it.places.split(",") as ArrayList<String>
             }
             return@let arrayListOf<String>()
         }
-
+        //데이터가 유효 기간을 넘겼거나 없을 경우에 서버에서 검색
         if (result == null || result.size == 0) {
             result = searchRemote(keyword)
             val resultStr = result.joinToString(",")
             if (createCache) {
+                // 없을 경우에 캐쉬 생성
                 cacheSvc.saveCache(keyword, resultStr)
             } else {
+                // 유효 기간을 넘긴 경우는 캐쉬 업데이트
                 cacheSvc.updateCachedPlaces(keyword, resultStr)
             }
         }
-
-        print("searchPlace == $result\n")
+        
+        // 사용자 ID와 KeyWord로 SearchHistory 테이블에 저장
+        if (searchProperty.historyAll) {
+            // 검색 실패와 성공의 모든 키워드를 남깁니다.
+            searchHistorySvc.saveUserHistory(userName, keyword)
+        } else if (result.size > 0) {
+            // 검색 성공인 경우에만 키워드를 남깁니다.
+            searchHistorySvc.saveUserHistory(userName, keyword)
+        }
 
         return result
     }
