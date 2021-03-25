@@ -125,7 +125,7 @@
 - CURL을 통한 테스트 방법
   - User-Join
     ```
-    curl -H "Content-Type:application/json" -d "{\"userName\":\"사용자이름\",\"password\":\"암호\"}" -X POST http://서버주소:서버포트/join
+    curl -H "Content-Type:application/json"  -H "X-AUTH-TOKEN: JWT_Token" -d "{\"userName\":\"사용자이름\",\"password\":\"암호\"}" -X POST http://서버주소:서버포트/join
     ```
 
   - User-Login
@@ -151,7 +151,7 @@
 - 예제
   - User-Join
     ```
-    curl -H "Content-Type:application/json" -d "{\"userName\":\"a-user@test.com\",\"password\":\"password\"}" -X POST http://127.0.0.1:7060/join
+    curl -H "Content-Type:application/json" -H "X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhLXVzZXJAdGVzdC5jb20iLCJyb2xlcyI6ImphdmEudXRpbC5zdHJlYW0uUmVmZXJlbmNlUGlwZWxpbmUkSGVhZEAzMzI2MTViYyIsImlhdCI6MTYxNjY1MDEyMywiZXhwIjoxNjE2NjUxOTIzfQ.o4e5M4kWy0lmcGmh2UwQn0hkVTHkW3WiEiWcsG_voDE" -d "{\"userName\":\"a-user@test.com\",\"password\":\"password\"}" -X POST http://127.0.0.1:7060/join
     ```
 
   - User-Login
