@@ -10,7 +10,7 @@ import org.springframework.util.ObjectUtils
 import java.net.URLEncoder
 
 @Component
-@Order(1)
+@Order(2)
 class DaumSvc(@Autowired val daumConfig: DaumConfig,
               @Autowired val httpClient: HttpClient) : SearchApiSvc {
     override fun searchPlace(keyWord: String, limit: Int): List<String> {

@@ -23,6 +23,19 @@ class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
     fun searchLocal(keyword: String) : SearchCache?{
         return cacheSvc.getCachedPlaces(keyword)
     }
+    
+    /***
+     * 설명 :
+     *   두개의 리스트의 교집합을 반환 합니다.
+     */
+    private fun intersection(data1: List<String>, data2: List<String>) : ArrayList<String> {
+        val commons = ArrayList<String>()
+        
+        data1.forEach { it ->
+            if (data2.contains(it)) commons.add(it)
+        }
+        return commons
+    }
 
     /***
      * 설명 :
@@ -31,6 +44,7 @@ class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
      *   - 다음의 검색 값을 앞에 위치시키며,
      *   - 네이버의 검색 값을 뒤에 놓는다.
      *   - 단, 두 개의 검색에서 공통으로 나오는 경우는 그 값을 먼저 놓는다.
+     *   - 공통 데이터의 순서는 다음검색 결과와 동일해야 한다.
      *
      * Params
      *  - keyword : String, 검색할 키워드
@@ -38,26 +52,33 @@ class SearchSvc(@Autowired val searchApiSvcs: List<SearchApiSvc>,
      * Return
      *  - ArrayList<String>, 검색 결과
      */
-
     fun searchRemote(keyword: String) : ArrayList<String> {
-        val secondResultCols = ArrayList<String>()
-        val firstResultCols = ArrayList<String>()
+        val placesCols = ArrayList<List<String>>()
+        
+        /* 데이터를 수집한다. */
         searchApiSvcs.forEach { search ->
-            val results = search.searchPlace(keyWord = keyword)
-            print("results = $results\n")
-            for (result in results) {
-                if (secondResultCols.contains(result)) {
-                    secondResultCols.remove(result)
-                    firstResultCols.add(result)
-                } else {
-                    secondResultCols.add(result)
-                }
+            placesCols.add(search.searchPlace(keyWord = keyword))
+        }
+        
+        /* 교집합 데이터를 찾는다. */
+        val common =
+            if (placesCols.size == 2)
+                intersection(placesCols[0], placesCols[1])
+            else if (placesCols.size > 0)
+                placesCols[0]
+            else
+                arrayListOf()
+        
+        /* 모든 데이터에서 교집합 데이터를 제거 한다. */
+        common.forEach { it ->
+            with(it) {
+                (placesCols[0] as ArrayList<String>).remove(it)
+                (placesCols[1] as ArrayList<String>).remove(it)
             }
         }
-
-        print("first  results = $firstResultCols\n")
-        print("second results = $secondResultCols\n")
-        return (firstResultCols + secondResultCols) as ArrayList<String>
+        
+        /* 데이터를 반환한다. */
+        return (common + placesCols[0] + placesCols[1]) as ArrayList<String>
     }
 
     /***

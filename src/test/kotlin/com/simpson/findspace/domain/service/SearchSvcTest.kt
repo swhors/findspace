@@ -54,13 +54,13 @@ internal class SearchSvcTest {
     private val searchCaches1 = SearchCache.Build()
             .hitcount(3)
             .keyword("A")
-            .places("COMMON_2,COMMON_1,DAUM_1,DAUM_2,DAUM_3,NAVER_1,NAVER_2,NAVER_3")
+            .places("COMMON_1,COMMON_2,DAUM_1,DAUM_2,DAUM_3,NAVER_1,NAVER_2,NAVER_3")
             .build()
 
     private val daumResult = arrayListOf("DAUM_1", "DAUM_2", "COMMON_1", "DAUM_3", "COMMON_2")
     private val naverResult = arrayListOf("NAVER_1", "COMMON_2", "NAVER_2", "COMMON_1", "NAVER_3")
 
-    private val wantedResult = arrayListOf("COMMON_2", "COMMON_1",
+    private val wantedResult = arrayListOf("COMMON_1", "COMMON_2",
             "DAUM_1", "DAUM_2", "DAUM_3",
             "NAVER_1", "NAVER_2", "NAVER_3")
 
@@ -86,8 +86,8 @@ internal class SearchSvcTest {
         val wantedSize = 8
 
         assertEquals(result.size, wantedSize)
-        assertEquals(result[0], "COMMON_2")
-        assertEquals(result[1], "COMMON_1")
+        assertEquals(result[0], "COMMON_1")
+        assertEquals(result[1], "COMMON_2")
         assertEquals(result[2], "DAUM_1")
         assertEquals(result[5], "NAVER_1")
     }
