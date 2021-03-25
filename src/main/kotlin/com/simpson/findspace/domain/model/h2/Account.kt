@@ -22,11 +22,7 @@ data class Account(
     @CreationTimestamp
     var createDt: LocalDateTime = LocalDateTime.now()
 ){
-    constructor(id: Long, userName: String?,
-                password: String?, createDt: LocalDateTime?):
-            this(id = id, userName = userName,
-                    password = password, roles = mutableSetOf(),
-                    createDt = createDt!!)
+    constructor() : this(null, "", "", mutableSetOf(), LocalDateTime.now())
     
     constructor(builder: Builder) : this(null,
                                          builder.userName,
