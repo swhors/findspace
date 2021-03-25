@@ -9,6 +9,15 @@
   - Search-History
   - Search-Favorite
 
+## 실행 방법
+- 실행 환경
+  -  JAVA 1.8 이상 및 Kotlin 1.4
+  -  maven 최신
+
+- 실행 방법
+  - mvn clean;mvn package
+  - java -jar target/findspace-0.0.1-SNAPSHOT.jar
+
 ## 상세 기능
 
 - User-Join
@@ -42,9 +51,13 @@
 - Search-Favorite
   - 가장 많이 검색되는 키워드 전송 합니다.
   - 테스트 방법은 다음과 같습니다.
-    - curl -H "Accept: */*" -H "Connection: keep-alive" -H "X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhLXVzZXJAdGVzdC5jb20iLCJyb2xlcyI6ImphdmEudXRpbC5zdHJlYW0uUmVmZXJlbmNlUGlwZWxpbmUkSGVhZEAzMzI2MTViYyIsImlhdCI6MTYxNjY1MDEyMywiZXhwIjoxNjE2NjUxOTIzfQ.o4e5M4kWy0lmcGmh2UwQn0hkVTHkW3WiEiWcsG_voDE" -X GET http://192.168.4.26:7060/api/search/favorite
+
   - 결과는 다음과 같이 JSON 형태로 반환합니다.
     - {"length":2,"favorities":[{"keyword":"seoul","hitCount":7},{"keyword":"인천횟집","hitCount":2}]}
 
+## 테스트
+
+- Search-Favorite
+    - curl -H "Accept: */*" -H "Connection: keep-alive" -H "X-AUTH-TOKEN: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhLXVzZXJAdGVzdC5jb20iLCJyb2xlcyI6ImphdmEudXRpbC5zdHJlYW0uUmVmZXJlbmNlUGlwZWxpbmUkSGVhZEAzMzI2MTViYyIsImlhdCI6MTYxNjY1MDEyMywiZXhwIjoxNjE2NjUxOTIzfQ.o4e5M4kWy0lmcGmh2UwQn0hkVTHkW3WiEiWcsG_voDE" -X GET http://192.168.4.26:7060/api/search/favorite
 ## contact
   - swhors@naver.com
