@@ -11,7 +11,7 @@ import java.net.URLEncoder
 
 
 @Component
-@Order(1)
+@Order(2)
 class NaverSvc(@Autowired val naverConfig: NaverConfig,
                @Autowired val httpClient: HttpClient): SearchApiSvc {
     override fun searchPlace(keyWord: String, limit: Int) : List<String>{
