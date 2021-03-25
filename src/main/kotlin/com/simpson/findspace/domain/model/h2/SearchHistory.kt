@@ -18,6 +18,9 @@ data class SearchHistory(
         : this(id = null, userName = userName !!,
                keyword = keyword !!, createDt = LocalDateTime.now())
     
+    // JPA의 Select를 위하여 기본 생성자를 추가 합니다.
+    constructor() : this(null, "", "", LocalDateTime.now())
+    
     class Builder() {
         private var userName: String ?= null
             set

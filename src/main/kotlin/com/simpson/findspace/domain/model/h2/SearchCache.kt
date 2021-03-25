@@ -26,6 +26,11 @@ data class SearchCache(
         @UpdateTimestamp
         var updated: LocalDateTime = LocalDateTime.now() ) {
     
+    // JPA의 Select를 위하여 기본 생성자를 추가 합니다.
+    constructor() : this (null, "",
+            "", 0,
+            LocalDateTime.now(), LocalDateTime.now())
+    
     constructor(keyword: String?, places: String?, hitcount: Int?)
             : this (id = null,
                     keyword = keyword !!,
