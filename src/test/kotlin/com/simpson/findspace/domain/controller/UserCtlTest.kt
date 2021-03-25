@@ -25,7 +25,7 @@ internal class UserCtlTest {
     @Autowired
     @Mock
     private lateinit var passwordEncoder: PasswordEncoder
-
+    
     @Autowired
     @Mock
     private lateinit var jwtTokenProvider: JwtTokenProvider
@@ -54,7 +54,7 @@ internal class UserCtlTest {
         Mockito.`when`(searchProperty.refreshIntervalMin()).thenReturn(10)
     }
     
-    // 회원가입
+    // 회원가입을 테스트 합니다.
     @Test
     fun testJoin() {
         Mockito.doAnswer { invocation ->
@@ -63,13 +63,13 @@ internal class UserCtlTest {
             return@doAnswer inAccount
         }.`when`(accountRepo).save(any())
 
-        val id = userCtl
+        val result = userCtl
             .join(hashMapOf("userName" to userName, "password" to password))
 
-        assertEquals(id, wantedId)
+        assertEquals((result!!.length > 0), true)
     }
 
-    // 로그인
+    // 로그인을 테스트 합니다.
     @Test
     fun testLogin() {
         Mockito.doAnswer { invocation ->

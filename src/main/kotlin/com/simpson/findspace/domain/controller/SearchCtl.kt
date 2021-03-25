@@ -106,8 +106,8 @@ class SearchCtl(@Autowired val historySvc: SearchHistorySvc,
                         .build())
     }
 
-    @GetMapping("/search/place/{keyword}")
-    fun searchPlace(@PathVariable("keyword") keyword: String) : String{
+    @GetMapping("/search/place")
+    fun searchPlace(@RequestParam("keyword") keyword: String) : String{
         return searchPlaceInternal(
                 SecurityContextHolder.getContext()!!.authentication!!.name,
                 keyword)

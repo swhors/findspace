@@ -67,7 +67,8 @@ internal class DaumSvcTest {
                 anyMap<String, String>() as HashMap<String,String>)).thenReturn(response)
         return daumSvc.searchPlace(keyWord = keyword, limit = 1) as ArrayList<String>
     }
-
+    
+    // 장소 검색이 정상적으로 되는 것을 테스트 합니다.
     @Test
     fun searchPlaceRightCase() {
         val result = searchPlaceCore(true)
@@ -77,6 +78,7 @@ internal class DaumSvcTest {
         assertEquals(result[0], placeName)
     }
     
+    // 장소 검색이 정상적으로 되지 않은 경우의 출력을 테스트 합니다.
     @Test
     fun searchPlaceIllegalCase() {
         val result = searchPlaceCore(false)

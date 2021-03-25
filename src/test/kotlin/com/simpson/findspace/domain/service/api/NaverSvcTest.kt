@@ -59,6 +59,7 @@ internal class NaverSvcTest {
         return naverSvc.searchPlace(keyWord = keyWord, limit = 1) as ArrayList<String>
     }
 
+    // 정상적으로 검색이 된 경우의 출력을 테스트 합니다.
     @Test
     fun searchPlaceRightCase() {
         val result = searchPlaceCore(true)
@@ -68,6 +69,7 @@ internal class NaverSvcTest {
         assertTrue { result[0] == placeName }
     }
     
+    // 정상적으로 검색이 되지 않은 경우의 출력을 테스트 합니다.
     @Test
     fun seachPlaceIllegalCase() {
         val result = searchPlaceCore(false)

@@ -6,6 +6,7 @@ import com.simpson.findspace.domain.service.api.DaumSvc
 import com.simpson.findspace.domain.service.api.NaverSvc
 import com.simpson.findspace.domain.service.api.SearchApiSvc
 import com.simpson.findspace.domain.service.h2.SearchCacheSvc
+import com.simpson.findspace.domain.service.h2.SearchHistorySvc
 import org.junit.jupiter.api.BeforeEach
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,6 +24,10 @@ internal class SearchSvcTest {
     @Autowired
     @Mock
     private lateinit var cacheSvc: SearchCacheSvc
+    
+    @Autowired
+    @Mock
+    private lateinit var searchHistorySvc: SearchHistorySvc
     
     @Autowired
     @Mock
@@ -72,6 +77,7 @@ internal class SearchSvcTest {
         assertEquals(result!!.size, 3)
     }
 
+    // Daum과 Naver의 OpenAPI를 이용한 검색의 결과를 테스트 합니다.
     @Test
     fun searchRemote() {
         searchApiSvcs.clear()
@@ -92,6 +98,7 @@ internal class SearchSvcTest {
         assertEquals(result[5], "NAVER_1")
     }
 
+    // 로컬 DB의 값을 가져오는 경우를 테스트 합니다.
     @Test
     fun searchLocal() {
         Mockito.`when`(cacheSvc.getCachedPlaces(anyString())).thenReturn(searchCaches1)
@@ -100,6 +107,7 @@ internal class SearchSvcTest {
         assertEquals((result?.places?.length!! > 0), true)
     }
 
+    // 로컬 DB의 값을 가져오는 경우를 테스트 합니다.
     @Test
     fun searchPlaceFromLocal() {
         Mockito.`when`(cacheSvc.getCachedPlaces(anyString())).thenReturn(searchCaches1)
@@ -108,7 +116,8 @@ internal class SearchSvcTest {
         print("searchPlaceFromLocal = $result\n")
         assertEquals(result, wantedResult)
     }
-
+    
+    //Daum과 Naver의 OpenAPI를 이용한 검색의 결과를 테스트 합니다.
     @Test
     fun searchPlaceFromRemote() {
         Mockito.`when`(cacheSvc.getCachedPlaces(anyString())).thenReturn(null)

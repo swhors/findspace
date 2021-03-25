@@ -1,8 +1,5 @@
-//https://kjkjjang.wordpress.com/category/%EA%B0%9C%EB%B0%9C/spring/
-
 package com.simpson.findspace.domain.config.security
 
-import com.simpson.findspace.domain.service.h2.SearchHistorySvc
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.security.authentication.AuthenticationManager

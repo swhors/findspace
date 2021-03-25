@@ -1,8 +1,5 @@
 package com.simpson.findspace.domain.model.local
 
-import java.time.LocalDateTime
-import java.time.LocalTime
-
 data class HistoryResult(val keyword: String?, val created : String?) {
     constructor(builder: Builder) : this(builder.keyword, builder.created)
 

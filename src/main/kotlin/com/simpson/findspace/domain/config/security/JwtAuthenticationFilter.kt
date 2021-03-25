@@ -1,6 +1,5 @@
 package com.simpson.findspace.domain.config.security
 
-import com.simpson.findspace.domain.service.h2.SearchHistorySvc
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder

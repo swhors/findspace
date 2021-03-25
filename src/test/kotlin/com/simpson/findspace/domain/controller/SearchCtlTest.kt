@@ -43,6 +43,7 @@ internal class SearchCtlTest {
             SearchHistory.Builder().keyword("c").userName("a@test.com").build(),
     )
 
+    // 사용자의 히스토리를 가져오는 기능을 테스트 합니다.
     @Test
     fun getSearchHistory() {
         Mockito.`when`(historySvc.findTop10ByUserName(anyString())).thenReturn(histories)
@@ -57,6 +58,7 @@ internal class SearchCtlTest {
             SearchCache.Build().hitcount(1).keyword("c").places("c").build()
     )
 
+    // 자주찾는 키워드를 가져오는 것을 테스트 합니다.
     @Test
     fun getFavorite() {
         Mockito.`when`(searchSvc.getFavoriteKeyWord()).thenReturn(favorities)
@@ -69,6 +71,7 @@ internal class SearchCtlTest {
             "COMMON_1", "COMMON_2", "DAUM_1", "DAUM_2", "NAVER_1", "NAVER_2"
     )
 
+    // 키워드로 장소를 검색하는 것을 테스트 합니다.
     @Test
     fun searchPlace() {
         Mockito.`when`(searchSvc.searchPlace(anyString(), anyString())).thenReturn(places)
