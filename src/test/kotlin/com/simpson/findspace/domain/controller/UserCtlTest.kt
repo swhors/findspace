@@ -4,12 +4,11 @@ import com.simpson.findspace.domain.config.SearchProperty
 import com.simpson.findspace.domain.config.security.JwtTokenProvider
 import com.simpson.findspace.domain.model.h2.Account
 import com.simpson.findspace.domain.model.h2.AccountRole
-import com.simpson.findspace.domain.repository.AccountRepo
+import com.simpson.findspace.domain.service.h2.AccountSvc
 import org.junit.jupiter.api.BeforeEach
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.*
-import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +31,7 @@ internal class UserCtlTest {
 
     @Autowired
     @Mock
-    private lateinit var accountRepo: AccountRepo
+    private lateinit var accountSvc: AccountSvc
 
     @Autowired
     @Mock
@@ -58,15 +57,19 @@ internal class UserCtlTest {
     @Test
     fun testJoin() {
         Mockito.doAnswer { invocation ->
-            val inAccount = invocation.arguments[0] as Account
-            inAccount.id = wantedId
-            return@doAnswer inAccount
-        }.`when`(accountRepo).save(any())
+            val userName = invocation.arguments[0] as String
+            val password = invocation.arguments[1] as String
+            return@doAnswer Account.Builder()
+                .userName(userName)
+                .password(password)
+                .roles(AccountRole.USER)
+                .build()
+        }.`when`(accountSvc).saveAccount(anyString(), anyString())
 
         val result = userCtl
-            .join(hashMapOf("userName" to userName, "password" to password))
+            .joinInternal(userName,password)
 
-        assertEquals((result!!.length > 0), true)
+        assertEquals((result !!.isNotEmpty()), true)
     }
 
     // 로그인을 테스트 합니다.
@@ -78,7 +81,7 @@ internal class UserCtlTest {
                 .userName(userName1 as String?)
                 .password(password as String?)
                 .roles(AccountRole.USER).build()
-        }.`when`(accountRepo).findByUserName(anyString())
+        }.`when`(accountSvc).findByUserName(anyString())
 
         Mockito.doAnswer{
             return@doAnswer (it.arguments[0] == it.arguments[1])
@@ -87,8 +90,8 @@ internal class UserCtlTest {
         Mockito.`when`(jwtTokenProvider.createToken(anyString(), anyString())).thenReturn(wantedJWT)
 
         val result = userCtl.login(hashMapOf("userName" to userName, "password" to password))
-		print("testLogin jwt = $result\n")
-		
-		assertEquals((result?.length!! > 0), true)
+        print("testLogin jwt = $result\n")
+
+        assertEquals((result?.length!! > 0), true)
     }
 }

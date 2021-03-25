@@ -2,26 +2,40 @@ package com.simpson.findspace.domain.controller
 
 import com.google.gson.Gson
 import com.simpson.findspace.domain.model.h2.Account
-import com.simpson.findspace.domain.model.h2.AccountRole
-import com.simpson.findspace.domain.repository.AccountRepo
 import com.simpson.findspace.domain.config.security.JwtTokenProvider
+import com.simpson.findspace.domain.model.local.Error
 import com.simpson.findspace.domain.model.local.JoinResult
 import com.simpson.findspace.domain.model.local.LoginResult
+import com.simpson.findspace.domain.service.h2.AccountSvc
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
+import java.lang.Exception
+import javax.annotation.security.RolesAllowed
 
 @RestController
 class UserCtl(@Autowired private val passwordEncoder: PasswordEncoder,
               @Autowired private val jwtTokenProvider: JwtTokenProvider,
-              @Autowired private val accountRepo: AccountRepo) {
+              @Autowired private val accountSvc: AccountSvc) {
+
+    private val adminName = "admin@test.com"
 
     @GetMapping("/hello")
     fun printHello() : String {
         print("hello")
         return "hello"
     }
-    
+
+    fun joinInternal(userName: String, password: String) : String {
+        return try {
+            val id = accountSvc.saveAccount(userName, password).id
+            Gson().toJson(id?.let { JoinResult(it) })
+        } catch (e: Exception) {
+            Gson().toJson(Error(500, e.message.toString()))
+        }
+    }
+
     /***
      * 설명 :
      *  회원 가입
@@ -32,14 +46,13 @@ class UserCtl(@Autowired private val passwordEncoder: PasswordEncoder,
      *   String = 사용자 ID를 갖는 Json 데이터
      */
     @PostMapping("/join")
-    fun join(@RequestBody user: Map<String?, String?>): String? {
-        val id = accountRepo.save(
-                Account.Builder()
-                        .userName(user["userName"])
-                        .password(passwordEncoder.encode(user["password"]))
-                        .roles(AccountRole.USER)
-                        .build()).id
-        return Gson().toJson(id?.let { JoinResult(it) })
+    @RolesAllowed("ROLE_ADMIN")
+    fun join(@RequestBody user: Map<String?, String?>) : String {
+        return if (SecurityContextHolder.getContext().authentication.name == adminName) {
+            joinInternal(user["userName"] !!, user["password"] !!)
+        } else {
+            Gson().toJson(Error(500, "관리자 권한이 없습니다."))
+        }
     }
     
     /***
@@ -53,10 +66,13 @@ class UserCtl(@Autowired private val passwordEncoder: PasswordEncoder,
      */
     @PostMapping("/login")
     fun login(@RequestBody user: Map<String?, String?>): String? {
-        val account: Account = user["userName"]?.let { accountRepo.findByUserName(it) }
-                               ?: throw java.lang.IllegalArgumentException("가입 되지 않은 사용자 입니다.")
-        require(passwordEncoder.matches(user["password"], account.password)) {"잘못 된 비밀번호 입니다."}
-        val token = jwtTokenProvider.createToken(account.userName, account.roles!!.stream().toString())
-        return Gson().toJson(token?.let { LoginResult.Builder().id(account.id).token(it).build() })
+        val account: Account = user["userName"]?.let { accountSvc.findByUserName(it) }
+                               ?: return Gson().toJson(Error(500, "가입 되지 않은 사용자 입니다."))
+        return if ( passwordEncoder.matches(user["password"], account.password)) {
+            val token = jwtTokenProvider.createToken(account.userName, account.roles !!.stream().toString())
+            Gson().toJson(token?.let { LoginResult.Builder().id(account.id).token(it).build() })
+        } else {
+            Gson().toJson(Error(500, "잘못 된 비밀 번호 입니다."))
+        }
     }
 }
