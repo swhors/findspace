@@ -6,8 +6,6 @@ import com.simpson.findspace.domain.service.api.DaumSvc
 import com.simpson.findspace.domain.service.api.NaverSvc
 import com.simpson.findspace.domain.service.api.SearchApiSvc
 import com.simpson.findspace.domain.service.h2.SearchCacheSvc
-import com.simpson.findspace.domain.service.h2.SearchHistorySvc
-import org.apache.tomcat.util.http.parser.Authorization
 import org.junit.jupiter.api.BeforeEach
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,11 +13,6 @@ import org.mockito.*
 import org.mockito.ArgumentMatchers.*
 import org.mockito.junit.MockitoJUnitRunner
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.context.SecurityContext
-import org.springframework.security.core.context.SecurityContextHolder
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -31,10 +24,6 @@ internal class SearchSvcTest {
     @Mock
     private lateinit var cacheSvc: SearchCacheSvc
     
-    @Autowired
-    @Mock
-    private lateinit var historySvc: SearchHistorySvc
-
     @Autowired
     @Mock
     private lateinit var daumSvc: DaumSvc
